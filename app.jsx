@@ -5,7 +5,7 @@ import maplibregl from 'maplibre-gl';
 import DeckGL from '@deck.gl/react';
 import {ScatterplotLayer} from '@deck.gl/layers';
 
-const DATA_URL = './large_demo.json'; // eslint-disable-line
+const DATA_URL = './data/large_demo.json'; // eslint-disable-line
 
 const INITIAL_VIEW_STATE = {
   longitude: 114.183334,
@@ -34,7 +34,7 @@ export default function App({
       radiusMaxPixels: 10,
       getPosition: d => [ d['Demo Longitude'], d['Demo Latitude'] ],
       getRadius: d => Math.sqrt(d["Demo Total Bank1 Opportunity"]),
-      getFillColor: d => [0, 255 * d["Demo Total Bank1 Opportunity"], 0, 150],
+      getFillColor: d => [(255 * (1 - d["Demo Total Bank1 Opportunity"])), (255 * d["Demo Total Bank1 Opportunity"]), 0, 150],
       onHover: info => setHoverInfo(info)
     })
   ];
