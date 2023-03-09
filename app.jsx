@@ -20,7 +20,7 @@ const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-styl
 
 export default function App({
   data = DATA_URL,
-  radiusPixels = 10,
+  radiusPixels = 1,
   mapStyle = MAP_STYLE
 }) {
   const [hoverInfo, setHoverInfo] = useState(0);
@@ -31,10 +31,10 @@ export default function App({
       pickable: true,
       radiusScale: radiusPixels,
       radiusMinPixels: 5,
-      radiusMaxPixels: 10,
+      radiusMaxPixels: 1000,
       getPosition: d => [ d['Demo Longitude'], d['Demo Latitude'] ],
-      getRadius: d => Math.sqrt(d["Demo Total Bank1 Opportunity"]),
-      getFillColor: d => [(255 * (1 - d["Demo Total Bank1 Opportunity"])), (255 * d["Demo Total Bank1 Opportunity"]), 0, 150],
+      getRadius: d => Math.sqrt(d["Demo Number of Units"]),
+      getFillColor: d => [(255 * (1 - (d["Demo Bank1 Opportunity"]/100))), (255 * (d["Demo Bank1 Opportunity"]/100)),0, 128],
       onHover: info => setHoverInfo(info)
     })
   ];
@@ -43,11 +43,13 @@ export default function App({
     <DeckGL initialViewState={INITIAL_VIEW_STATE} controller={true} layers={layers}>
       <Map reuseMaps mapLib={maplibregl} mapStyle={mapStyle} preventStyleDiffing={true} />
       {hoverInfo.object && (
-        <div style={{position: 'absolute', zIndex: 1, pointerEvents: 'none', left: hoverInfo.x, top: hoverInfo.y, color: '#FFFFFF', backgroundColor: '#000000'}}>
+        <div style={{position: 'absolute', zIndex: 1, pointerEvents: 'none', left: hoverInfo.x, top: hoverInfo.y, color: '#FFFFFF', backgroundColor: '#000000', padding: '10px 10px 10px 10px'}}>
           <p>Address: {hoverInfo.object["Demo Address"]}</p>
-          <p>Number of households: {hoverInfo.object["Demo Total Units"]}</p>
-          <p>Imputed PVI: {hoverInfo.object["Demo Imputed PVI (sum)"]}</p>
-          <p>Bank1 Opportunity: {hoverInfo.object["Demo Total Bank1 Opportunity"]}</p>
+          <p>Number of households: {hoverInfo.object["Demo Number of Units"]}</p>
+          <p>Imputed PVI: {hoverInfo.object["Demo Imputed Pvi"]}</p>
+          <p>Bank1 Opportunity: {hoverInfo.object["Demo Bank1 Opportunity"].toFixed(2)}</p>
+          <p>Bank1 Penetration: {hoverInfo.object["Demo Bank1 Penetration"].toFixed(2)}</p>
+          <p>Industry Penetration: {hoverInfo.object["Demo Industry Penetration"].toFixed(2)}</p>
         </div>
       )}
     </DeckGL>
